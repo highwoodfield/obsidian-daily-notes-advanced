@@ -9,7 +9,9 @@ const DEFAULT_SETTINGS: DNASettings = {
 }
 
 const TARGET_FOLDER = "Daily"
-const DATE_FORMAT = "YYYY-MM-DD"
+const YEAR_FORMAT = "YYYY"
+const MONTH_FORMAT = "MM"
+const YMD_FORMAT = "YYYY-MM-DD"
 const TIME_FORMAT = "HH-mm"
 
 export default class DNAPlugin extends Plugin {
@@ -27,10 +29,11 @@ export default class DNAPlugin extends Plugin {
 
 	async createDailyNote() {
 		const now = moment()
-		await this.createFolderIfNeeded(TARGET_FOLDER)
-		const pathByDate = TARGET_FOLDER + "/" + now.format(DATE_FORMAT)
-		await this.createFolderIfNeeded(pathByDate)
-		const file = await this.app.vault.create(pathByDate + "/" + now.format(TIME_FORMAT) + ".md", "")
+		const folderPath = TARGET_FOLDER + "/" + now.format(YEAR_FORMAT) +
+			"/" + now.format(MONTH_FORMAT) +
+			"/" + now.format(YMD_FORMAT)
+		await this.createFolderIfNeeded(folderPath)
+		const file = await this.app.vault.create(folderPath + "/" + now.format(TIME_FORMAT) + ".md", "")
 		const leaf = this.app.workspace.getLeaf(false)
 		leaf.openFile(file)
 	}
